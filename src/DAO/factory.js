@@ -1,9 +1,12 @@
 import config from '../config/config.js';
 import mongoose from 'mongoose';
+import { ProductsMongo } from './models/products.model.js';
+
+
 
 export let Users;
 export let Carts;
-export let Products;
+export let Products = ProductsMongo;
 export let Tickets;
 switch (config.persistence) {
     case 'MONGO':
@@ -26,12 +29,12 @@ switch (config.persistence) {
         const { UsersMemory } = await import('./memory/users.memory.js');
         Users = UsersMemory;
         const { CartsMemory } = await import('./memory/carts.memory.js');
-        Carts = CartsMemory
+        Carts = CartsMemory;
         const { ProductsMemory } = await import('./memory/products.memory.js');
-        Products = ProductsMemory
-        
+        Products = ProductsMemory;
+
         const { TicketsMemory } = await import('./memory/tickets.memory.js');
-        Tickets = TicketsMemory
+        Tickets = TicketsMemory;
 
         break;
     default:

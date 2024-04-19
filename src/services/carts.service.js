@@ -4,11 +4,11 @@ import { Carts } from "../DAO/factory.js";
 import { prodService } from "./products.service.js";
 import config from "../config/config.js";
 
-class CartsService{
+class CartsService {
     async getAllCarts() {
         try {
-            let allCarts = await Carts.getAllCarts()
-            return allCarts;
+            const carts = await Carts.getAllCarts(); // Asegúrate de que la función getAllCarts exista en el módulo importado
+            return carts;
         } catch (error) {
             console.log(error);
             throw new Error("Unable to get all carts");
@@ -25,20 +25,20 @@ class CartsService{
             throw new Error("Unable to find the cart");
         }
     }
-    
+
     async createProd({ cid, pid }) {
         try {
-            const findProdInCart = await Carts.findProdInCart({cid, pid});
+            const findProdInCart = await Carts.findProdInCart({ cid, pid });
             if (findProdInCart) {
                 if (config.persistence == 'MONGO') {
                     const productToUpdate = findProdInCart.products.find(product => product.pid.equals(new ObjectId(pid)));
                     if (productToUpdate) {
-                        await Carts.updateOneProd({cid,pid,inc:1})
+                        await Carts.updateOneProd({ cid, pid, inc: 1 })
                     }
-                }else{
+                } else {
                     const productToUpdate = findProdInCart.products.find(product => product.pid._id == pid);
                     if (productToUpdate) {
-                        await Carts.updateOneProd({cid,pid,inc:1})
+                        await Carts.updateOneProd({ cid, pid, inc: 1 })
                     }
                 }
             } else {
@@ -46,39 +46,39 @@ class CartsService{
             }
             const cartToUpdate = await Carts.findOne(cid);
             return cartToUpdate;
-            } catch (error) {
-                console.error('Error updating cart:', error);
-                throw error;
-            }
+        } catch (error) {
+            console.error('Error updating cart:', error);
+            throw error;
+        }
     }
 
-    async createCart(){
+    async createCart() {
         const newCart = await Carts.create();
         return newCart
     }
 
     async deleteProd({ cid, pid }) {
         try {
-            const findProdInCart = await Carts.findProdInCart({cid, pid});
+            const findProdInCart = await Carts.findProdInCart({ cid, pid });
             if (findProdInCart) {
                 if (config.persistence == 'MONGO') {
                     const productToUpdate = findProdInCart.products.find(product => product.pid.equals(new ObjectId(pid)));
                     if (productToUpdate.quantity > 1) {
-                        await Carts.updateOneProd({cid,pid,inc:-1})
-                    }else {
+                        await Carts.updateOneProd({ cid, pid, inc: -1 })
+                    } else {
                         await Carts.findCartAndUpdate({ cid, pid, operation: 'pull' });
                     }
-                }else{
+                } else {
                     const productToUpdate = findProdInCart.products.find(product => product.pid._id == pid);
                     if (productToUpdate.quantity > 1) {
-                        await Carts.updateOneProd({cid,pid,inc:-1})
-                    }else {
+                        await Carts.updateOneProd({ cid, pid, inc: -1 })
+                    } else {
                         await Carts.findCartAndUpdate({ cid, pid, operation: 'pull' });
                     }
                 }
             }
             const cartToUpdate = await Carts.findOne(cid);
-            return cartToUpdate; 
+            return cartToUpdate;
         } catch (error) {
             console.error('Error deleting product from cart:', error);
             throw error;
@@ -94,12 +94,12 @@ class CartsService{
                 const pid = product.pid._id;
                 const quantity = product.quantity;
 
-                await prodService.updateOneProd({pid, quantity});
+                await prodService.updateOneProd({ pid, quantity });
             });
-            await Carts.findCartAndUpdate({ cid, pid:null, operation: 'clean' });
+            await Carts.findCartAndUpdate({ cid, pid: null, operation: 'clean' });
 
             const cartToUpdate = await Carts.findOne(cid);
-            return cartToUpdate; 
+            return cartToUpdate;
         } catch (error) {
             console.error('Error deleting product from cart:', error);
             throw error;

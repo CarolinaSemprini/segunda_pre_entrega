@@ -1,8 +1,8 @@
 import { MongooseProductModel } from "./mongoose/products.mongoose.js";
-class ProductsModel{
+class ProductsModel {
     getAllProducts() {
-        try{
-            let allProds = MongooseProductModel.find({},{path: false, __v: false,});
+        try {
+            let allProds = MongooseProductModel.find({}, { path: false, __v: false, });
             return allProds
         } catch (error) {
             console.log(error);
@@ -10,9 +10,9 @@ class ProductsModel{
         }
     }
 
-    async paginate({query,numberPage}) {
-        try{
-            const pages = await MongooseProductModel.paginate(query,{limit:3, page:numberPage || 1})
+    async paginate({ query, numberPage }) {
+        try {
+            const pages = await MongooseProductModel.paginate(query, { limit: 3, page: numberPage || 1 })
             return pages
         } catch (error) {
             console.log(error);
@@ -25,8 +25,8 @@ class ProductsModel{
             const productFinder = await MongooseProductModel.findOne(
                 { _id: pid },
                 {
-                path: false,
-                __v: false,
+                    path: false,
+                    __v: false,
                 }
             );
             return productFinder;
@@ -45,7 +45,7 @@ class ProductsModel{
             throw new Error("Unable to delete the product");
         }
     }
-    
+
     async create(product) {
         try {
             const createdProduct = await MongooseProductModel.create(product);
@@ -76,8 +76,8 @@ class ProductsModel{
         }
     }
 
-    async updateOneProd({pid,quantity}) {
-        try{
+    async updateOneProd({ pid, quantity }) {
+        try {
             await MongooseProductModel.updateOne({ _id: pid }, { $inc: { stock: quantity } });
         } catch (error) {
             console.log(error);
@@ -87,9 +87,9 @@ class ProductsModel{
 
     async viewsProducts() {
         try {
-            const views = await MongooseProductModel.find({},{
-                path:false,
-                __v:false
+            const views = await MongooseProductModel.find({}, {
+                path: false,
+                __v: false
             }).lean()
 
             return views;

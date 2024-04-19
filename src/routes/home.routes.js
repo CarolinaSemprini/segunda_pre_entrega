@@ -3,7 +3,7 @@ import { prodService } from "../services/products.service.js";
 
 export const homeRouter = express.Router()
 
-homeRouter.get('/', async (req,res)=>{
+/*homeRouter.get('/', async (req,res)=>{
     try{
         let allProducts = await prodService.viewsProducts()
         return res
@@ -15,4 +15,13 @@ homeRouter.get('/', async (req,res)=>{
         return res.status(500).json({ status: "error", msg: "Error getting the products" })
     }
     
-})
+})*/
+
+homeRouter.get('/', async (req, res) => {
+    try {
+        const products = await viewService.viewsProducts();
+        return res.status(200).render('home', { products });
+    } catch (error) {
+        return res.status(500).json({ status: "error", msg: "Error getting the products" });
+    }
+});

@@ -1,17 +1,17 @@
 import { prodService } from "../services/products.service.js";
 
-class ProductsController{
-    getAllProducts = async (req,res)=>{
-        try{
+class ProductsController {
+    getAllProducts = async (req, res) => {
+        try {
             const { limit, sort, page, category, stock } = req.query;
-    
+
             let parsedLimit = parseInt(limit);
             let parsedPage = parseInt(page);
-    
+
             if (isNaN(parsedLimit) || parsedLimit <= 0) {
                 parsedLimit = 10;
             }
-    
+
             if (parsedLimit) {
                 let limitProd = await prodService.getAllProducts(req, parsedLimit, sort, parsedPage, category, stock);
                 return res.status(200).json({ status: "success", msg: 'limited number of products', payload: limitProd });
@@ -25,19 +25,19 @@ class ProductsController{
         }
     }
 
-    findOne = async (req,res)=>{
-        try{
-            const pid=req.params.pid
+    findOne = async (req, res) => {
+        try {
+            const pid = req.params.pid
             const productFinder = await prodService.findOne(pid)
             if (productFinder) {
                 return res
-                .status(201).
-                json({status:"success", msg:'Product found',payload:productFinder})
+                    .status(201).
+                    json({ status: "success", msg: 'Product found', payload: productFinder })
             }
-            else{
+            else {
                 return res
-                .status(400).
-                json({status:"error", msg:'product not found'})
+                    .status(400).
+                    json({ status: "error", msg: 'product not found' })
             }
         }
         catch (error) {
@@ -45,61 +45,61 @@ class ProductsController{
         }
     }
 
-    delete = async(req,res)=>{
-        try{
-            const pid=req.params.pid
+    delete = async (req, res) => {
+        try {
+            const pid = req.params.pid
             const deletedProduct = await prodService.delete(pid)
             return res
-            .status(200).
-            json({status:"success", msg:'removed product',payload:deletedProduct})
+                .status(200).
+                json({ status: "success", msg: 'removed product', payload: deletedProduct })
         }
         catch (error) {
             return res.status(500).json({ status: 'error', msg: 'could not delete product', error: error.message });
         }
     }
 
-    create = async (req,res)=>{
-        try{
+    create = async (req, res) => {
+        try {
             if (!req.file) {
                 return res
-                .status(400).
-                json({status:"error", msg:'before upload a file to be able to modify the product'})
+                    .status(400).
+                    json({ status: "error", msg: 'before upload a file to be able to modify the product' })
             }
-    
-            const name =req.file.filename;
-            const product = { ...req.body, thumbnail: `http://localhost:8080/${name}`, path:`${req.file.path}` };
+
+            const name = req.file.filename;
+            const product = { ...req.body, thumbnail: `http://localhost:8080/${name}`, path: `${req.file.path}` };
             const createdProduct = await prodService.create(product)
             if (createdProduct) {
                 return res
-                .status(201).
-                json({status:"success", msg:'product created',payload:createdProduct})
+                    .status(201).
+                    json({ status: "success", msg: 'product created', payload: createdProduct })
             }
-            else{
+            else {
                 return res
-                .status(400).
-                json({status:"error", msg:'The product was not created because it does not meet the conditions'})
+                    .status(400).
+                    json({ status: "error", msg: 'The product was not created because it does not meet the conditions' })
             }
-            
+
         }
         catch (error) {
             return res.status(500).json({ status: 'error', msg: 'could not create product', error: error.message });
         }
     }
 
-    update = async (req,res)=>{
-        try{
-            const pid=req.params.pid
-            const {price,stock,status,...rest} = req.body
-            const updatedProduct = await prodService.update({pid,price,stock,status,rest})
+    update = async (req, res) => {
+        try {
+            const pid = req.params.pid
+            const { price, stock, status, ...rest } = req.body
+            const updatedProduct = await prodService.update({ pid, price, stock, status, rest })
             if (!updatedProduct) {
                 return res
-                .status(404)
-                .json({status:"error", msg:'Product to update not found',payload:{}})
+                    .status(404)
+                    .json({ status: "error", msg: 'Product to update not found', payload: {} })
             }
-    
+
             return res
-            .status(200).
-            json({status:"success", msg:'modified product',payload:updatedProduct})
+                .status(200).
+                json({ status: "success", msg: 'modified product', payload: updatedProduct })
         }
         catch (error) {
             return res.status(500).json({ status: 'error', msg: 'could not update the product', error: error.message });

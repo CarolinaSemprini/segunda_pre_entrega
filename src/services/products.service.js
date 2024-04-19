@@ -3,11 +3,14 @@
 import { Products } from '../DAO/factory.js';
 import { parse } from 'url';
 
-class ProductsService{
-    async getAllProducts(req, limit,sort,numberPage,category, stock) {
-        try{
+class ProductsService {
+    async getAllProducts(req, limit, sort, numberPage, category, stock) {
+        try {
+
+            const products = await Products.getAllProducts(req, limit, sort, numberPage, category, stock);
+
             let query = Products.getAllProducts()
-            
+
             if (sort) {
                 query = query.sort({ price: sort })
             }
@@ -17,12 +20,12 @@ class ProductsService{
             } else if (stock) {
                 query = query.find({ stock: stock });
             }
-            
+
             if (limit) {
                 query = query.limit(limit)
             }
-            
-            const pages = await Products.paginate({query,numberPage})
+
+            const pages = await Products.paginate({ query, numberPage })
 
 
             const { docs, totalPages, page, hasPrevPage, hasNextPage, prevPage, nextPage } = pages;
@@ -51,7 +54,7 @@ class ProductsService{
                 const updatedLink = `${parsedUrl.pathname}?${searchParams.toString()}`;
                 return `${req.protocol}://${req.get('host')}${updatedLink}`
             }
-            
+
             function getNextLink(currentLink, nextPage) {
                 const parsedUrl = parse(currentLink, true);
                 const searchParams = new URLSearchParams(parsedUrl.search);
@@ -84,7 +87,7 @@ class ProductsService{
             throw new Error("Unable to delete the product");
         }
     }
-    
+
     async create(product) {
         try {
             const createdProduct = await Products.create(product);
@@ -97,7 +100,7 @@ class ProductsService{
 
     async update({ pid, price, stock, status, rest }) {
         try {
-            const updatedProduct = await Products.update({pid, price, stock, status, rest})
+            const updatedProduct = await Products.update({ pid, price, stock, status, rest })
             return updatedProduct;
         } catch (error) {
             console.log(error);
@@ -105,9 +108,9 @@ class ProductsService{
         }
     }
 
-    async updateOneProd({pid,quantity}) {
-        try{
-            await Products.updateOneProd({pid,quantity});
+    async updateOneProd({ pid, quantity }) {
+        try {
+            await Products.updateOneProd({ pid, quantity });
         } catch (error) {
             console.log(error);
             throw new Error("Unable to get products");

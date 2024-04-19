@@ -1,10 +1,10 @@
 import { ProductModel } from "../DAO/models/products.model.js"
 import { parse } from 'url';
 
-class ViewsService{
-    async getAllProducts(req, limit,sort,numberPage,category, stock) {
-        try{
-            let query = ProductModel.find({},{path: false, __v: false,});
+class ViewsService {
+    async getAllProducts(req, limit, sort, numberPage, category, stock) {
+        try {
+            let query = ProductModel.find({}, { path: false, __v: false, });
 
             if (sort) {
                 query = query.sort({ price: sort })
@@ -18,7 +18,7 @@ class ViewsService{
 
             const products = await query.limit(limit)
 
-            const pages = await ProductModel.paginate(query,{limit:3, page:numberPage || 1})
+            const pages = await ProductModel.paginate(query, { limit: 3, page: numberPage || 1 })
 
             const { docs, totalPages, page, hasPrevPage, hasNextPage, prevPage, nextPage } = pages;
 
@@ -46,7 +46,7 @@ class ViewsService{
                 const updatedLink = `${parsedUrl.pathname}?${searchParams.toString()}`;
                 return `${req.protocol}://${req.get('host')}${updatedLink}`
             }
-            
+
             function getNextLink(currentLink, nextPage) {
                 const parsedUrl = parse(currentLink, true);
                 const searchParams = new URLSearchParams(parsedUrl.search);
@@ -65,8 +65,8 @@ class ViewsService{
             const productFinder = await ProductModel.findOne(
                 { _id: pid },
                 {
-                path: false,
-                __v: false,
+                    path: false,
+                    __v: false,
                 }
             );
             return productFinder;
@@ -76,13 +76,23 @@ class ViewsService{
         }
     }
 
-    async viewsProducts() {
+    /*async viewsProducts() {
         try {
             const views = await ProductModel.find({},{
                 path:false,
                 __v:false
             }).lean()
 
+            return views;
+        } catch (error) {
+            console.log(error);
+            throw new Error("Unable to find the product");
+        }
+    }*/
+
+    async viewsProducts() {
+        try {
+            const views = await MongooseProductModel.viewsProducts();
             return views;
         } catch (error) {
             console.log(error);
