@@ -1,0 +1,91 @@
+:root{
+    --popover-height: 36px;
+}
+.popover{
+    position: relative;
+    height: var(--popover-height);
+    width: 60px;
+    text-align: center;
+}
+
+.popover span{
+    width:var(--popover-height) ;
+    height: var(--popover-height);
+    transition: 0.3s;
+}
+
+.popover:hover span{
+    opacity: 0.65;
+}
+
+.menu{
+    position: absolute;
+    top: 0;
+    right: 64px;
+    width: 260px;
+    padding: 16px;
+    transform: translate(8px, 0);
+    opacity: 0;
+    visibility: hidden;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 6px 50px rgba(0, 0, 0, 0.16);
+    transition: 0.3s;
+}
+
+.menu::after{
+    content: "";
+    position: absolute;
+    top: 16px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    background: inherit;
+}
+
+.popover:hover menu{
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0);
+}
+
+.menu header{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.menu h2{
+    margin: 0;
+    font-size: 14px;
+}
+
+.menu h3{
+    margin: 0;
+    font-size: 11px;
+    opacity: 0.5;
+}
+
+.menu header span{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Estilos para el mensaje de stock */
+#stockMessage {
+    display: none;
+}
+#stockMessage {
+    position: absolute;
+    top: 100%; /* Coloca el mensaje debajo del botón */
+    right: 0;
+    margin-top: 0.5rem; /* Espacio entre el botón y el mensaje */
+    padding: 0.5rem;
+    background-color: #e42d3c; /* Color de fondo */
+    border: 1px solid #f5c6cb; /* Borde */
+    border-radius: 0.25rem; /* Bordes redondeados */
+    color: #721c24; /* Color del texto */
+    font-size: 0.875rem; /* Tamaño de fuente */}

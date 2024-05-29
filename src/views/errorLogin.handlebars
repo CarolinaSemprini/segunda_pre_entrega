@@ -1,0 +1,16 @@
+<head>
+    <link rel="stylesheet" href="/login.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap" rel="stylesheet">
+</head>
+
+<div class="login-card">
+    <a class="home" href="/"><span class="material-symbols-outlined">home</span></a>
+    <h2>Error</h2>
+    <h3>{{msg}}</h3>
+    {{#if path}}
+        <a class="link-auth" href="/api/sessions/{{path}}">Volver</a>
+    {{/if}}
+</div>
