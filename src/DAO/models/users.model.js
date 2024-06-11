@@ -1,11 +1,12 @@
 import { MongooseUserModel } from "./mongoose/users.mongoose.js";
+import logger from '../../utils/logger.js';
 class UsersModel {
     async getAll() {
         try {
             let allUsers = await MongooseUserModel.find({}, { __v: false });
             return allUsers;
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to get users", error);
             throw new Error("Unable to get all users");
         }
     }
@@ -29,7 +30,7 @@ class UsersModel {
             );
             return userCreated;
         } catch (error) {
-            console.error('Error creating user:', error);
+            logger.error("Unable to create the user", error);
             throw error;
         }
     }

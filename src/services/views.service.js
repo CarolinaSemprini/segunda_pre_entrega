@@ -1,5 +1,6 @@
 import { ProductModel } from "../DAO/models/products.model.js"
 import { parse } from 'url';
+import logger from "../utils/logger.js";
 
 class ViewsService {
     async getAllProducts(req, limit, sort, numberPage, category, stock) {
@@ -55,7 +56,7 @@ class ViewsService {
                 return `${req.protocol}://${req.get('host')}${updatedLink}`
             }
         } catch (error) {
-            console.log(error);
+            logger.warning(error);
             throw new Error("Unable to get products");
         }
     }
@@ -71,7 +72,7 @@ class ViewsService {
             );
             return productFinder;
         } catch (error) {
-            console.log(error);
+            logger.warning(error);
             throw new Error("Unable to find the product");
         }
     }
@@ -85,7 +86,7 @@ class ViewsService {
 
             return views;
         } catch (error) {
-            console.log(error);
+            logger.warning(error);
             throw new Error("Unable to find the product");
         }
     }

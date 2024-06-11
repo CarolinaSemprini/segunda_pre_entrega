@@ -20,7 +20,7 @@ export function connectSocketServer(httpServer) {
                 // Crea un nuevo mensaje en la base de datos utilizando el modelo MessagesModel
                 await MessagesModel.create(msg);
             } catch (error) {
-                console.log(error);
+                logger.error(`Error creating message: ${error.message}`);
             }
 
             try {
@@ -28,7 +28,7 @@ export function connectSocketServer(httpServer) {
                 const msgs = await MessagesModel.find({});
                 socketServer.emit("msg_back_front", msgs);
             } catch (error) {
-                console.log(error);
+                logger.error(`Error finding messages: ${error.message}`);
             }
         });
     });

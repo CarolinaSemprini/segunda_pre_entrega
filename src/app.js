@@ -20,20 +20,28 @@ import { realTimeProductsRouter } from "./routes/realtimeproducts.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 import { usersRouter } from "./routes/users.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
+
 import { connectSocketServer } from "./utils/socketServer.js";
 import errorHandler from "./middlewares/error.js";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
+import logger from './utils/logger.js';
 
 const app = express();
+const PORT = 8080;
 dotenv.config();
 
 console.log("URL de conexión MongoDB:", config.MONGO_URL);
 
 //connectMongo();
-const httpServer = app.listen(config.PORT, () => {
-    console.log(
-        `APP corriendo en ${__dirname} - escuchando en el servidor puerto http://localhost:${config.PORT}`
-    );
+const httpServer = app.listen(PORT, () => {
+    try {
+        logger.info(`Listening to the port ${PORT}\nAcceder a:`);
+        logger.info(`\t1). http://localhost:${PORT}/api/products`);
+        logger.info(`\t2). http://localhost:${PORT}/carts`);
+        logger.info(`\t3). http://localhost:${PORT}/loggerTest`);
+    } catch (err) {
+        logger.error(err);
+    }
 });
 
 connectMongo();
@@ -81,6 +89,30 @@ app.use("/api/sessions/", sessionsRouter)
 app.use("/", sessionsRouter)
 app.use("/mockingproducts", mockingRouter)
 app.use(errorHandler)
+
+
+// Endpoint de prueba de logger
+app.get('/loggerTest', (req, res) => {
+    logger.debug("Este es un mensaje de depuración (debug)");
+    logger.http("Este es un mensaje HTTP (http)");
+    logger.info("Este es un mensaje informativo (info)");
+    logger.warning("Este es un mensaje de advertencia (warning)");
+    logger.error("Este es un mensaje de error (error)");
+
+
+    res.send("Prueba de logger realizada. Revisa la consola y el archivo de logs.");
+});
+
+
+// Endpoint para probar el logger
+app.get('/loggerTest', (req, res) => {
+    logger.debug('Debug log');
+    logger.http('HTTP log');
+    logger.info('Info log');
+    logger.warning('Warning log');
+    logger.error('Error log');
+    res.send('Logs tested. Check your console or log files.');
+});
 
 app.get("*", (req, res) => {
     return res.render('errorLogin', { msg: 'Error link' });

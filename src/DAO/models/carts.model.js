@@ -1,4 +1,5 @@
 import { MongooseCartModel } from "./mongoose/carts.mongoose.js";
+import logger from '../../utils/logger.js';
 
 class CartsModel {
     async getAllCarts() {
@@ -6,7 +7,7 @@ class CartsModel {
             let allCarts = await MongooseCartModel.find({}, { __v: false });
             return allCarts;
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to get all carts", error);
             throw new Error("Unable to get all carts");
         }
     }
@@ -16,7 +17,7 @@ class CartsModel {
             const cartFinder = await MongooseCartModel.findOne({ _id: cid }, { __v: false });
             return cartFinder;
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to find the cart", error);
             throw new Error("Unable to find the cart");
         }
     }
@@ -48,7 +49,7 @@ class CartsModel {
             const cartToUpdate = await MongooseCartModel.findOne({ _id: cid });
             return cartToUpdate;
         } catch (error) {
-            console.error('Error updating cart:', error);
+            logger.error('Error updating cart:', error);
             throw error;
         }
     }

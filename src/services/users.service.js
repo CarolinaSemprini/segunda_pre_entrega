@@ -4,6 +4,7 @@ import { Users, Carts } from "../DAO/factory.js";
 import { createHash } from "../utils/hash.js";
 import { UsersMongo } from "../DAO/models/users.model.js";
 import { CartsMongo } from "../DAO/models/carts.model.js";
+
 class UserService {
     async getAll() {
         try {

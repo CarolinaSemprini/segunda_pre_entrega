@@ -1,5 +1,5 @@
 import CurrentDTO from "../DAO/DTO/current.dto.js";
-
+import logger from "../utils/logger.js";
 class SessionsController {
     get = async (req, res) => {
         try {
@@ -14,7 +14,7 @@ class SessionsController {
             }
         }
         catch (error) {
-            console.log(error)
+            logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error })
         }
     }
@@ -24,7 +24,7 @@ class SessionsController {
             return res.render('login')
         }
         catch (error) {
-            console.log(error)
+            logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error })
         }
 
@@ -44,7 +44,7 @@ class SessionsController {
             };
             return res.redirect('/views/products');
         } catch (error) {
-            console.log(error);
+            logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error });
         }
     }
@@ -54,7 +54,7 @@ class SessionsController {
             return res.render('register')
         }
         catch (error) {
-            console.log(error)
+            logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error })
         }
     }
@@ -65,7 +65,7 @@ class SessionsController {
             return res.redirect('/views/products');
         }
         catch (error) {
-            console.log(error)
+            logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error })
         }
     }
@@ -88,7 +88,7 @@ class SessionsController {
             return res.render('profile', { first_name, last_name, username, email, age, role })
         }
         catch (error) {
-            console.log(error)
+            logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error })
         }
     }
@@ -108,7 +108,7 @@ class SessionsController {
             return res.redirect('/views/products');
         }
         catch (error) {
-            console.log(error)
+            logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error })
         }
 
@@ -120,7 +120,7 @@ class SessionsController {
             return res.render('errorLogin', { msg });
         }
         catch (error) {
-            console.log(error)
+            logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error })
         }
 

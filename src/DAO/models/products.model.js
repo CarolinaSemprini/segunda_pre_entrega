@@ -1,11 +1,13 @@
 import { MongooseProductModel } from "./mongoose/products.mongoose.js";
+import logger from "../../utils/logger.js";
+
 class ProductsModel {
     getAllProducts() {
         try {
             let allProds = MongooseProductModel.find({}, { path: false, __v: false, });
             return allProds
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to get products", error);
             throw new Error("Unable to get products");
         }
     }
@@ -15,7 +17,7 @@ class ProductsModel {
             const pages = await MongooseProductModel.paginate(query, { limit: 3, page: numberPage || 1 })
             return pages
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to get products", error);
             throw new Error("Unable to get products");
         }
     }
@@ -31,7 +33,7 @@ class ProductsModel {
             );
             return productFinder;
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to find the product", error);
             throw new Error("Unable to find the product");
         }
     }
@@ -41,7 +43,7 @@ class ProductsModel {
             const productsDeleted = await MongooseProductModel.deleteOne({ _id: pid });
             return productsDeleted;
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to delete the product", error);
             throw new Error("Unable to delete the product");
         }
     }
@@ -51,7 +53,7 @@ class ProductsModel {
             const createdProduct = await MongooseProductModel.create(product);
             return createdProduct;
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to create the product", error);
             throw new Error("Unable to create the product");
         }
     }
@@ -71,7 +73,7 @@ class ProductsModel {
             );
             return updatedProduct;
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to update the product", error);
             throw new Error("Unable to update the product");
         }
     }
@@ -80,7 +82,7 @@ class ProductsModel {
         try {
             await MongooseProductModel.updateOne({ _id: pid }, { $inc: { stock: quantity } });
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to get products", error);
             throw new Error("Unable to get products");
         }
     }
@@ -94,7 +96,7 @@ class ProductsModel {
 
             return views;
         } catch (error) {
-            console.log(error);
+            logger.error("Unable to find the product", error);
             throw new Error("Unable to find the product");
         }
     }

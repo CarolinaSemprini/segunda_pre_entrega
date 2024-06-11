@@ -6,6 +6,8 @@ import { isValidPassword, createHash } from "../utils/hash.js";
 import dotenv from 'dotenv'
 import { userService } from '../services/users.service.js';
 import { MongooseUserModel } from '../DAO/models/mongoose/users.mongoose.js';
+import logger from '../utils/logger.js';
+
 const LocalStrategy = local.Strategy;
 
 dotenv.config()
@@ -36,21 +38,23 @@ export function iniPassport() {
                                 role: 'admin'
                             });
                         }
+                        logger.error('User already exists');
                         return done(null, user);
                     }
 
                     if (!user) {
-                        console.log("User Not Found with email " + email);
+                        logger.error('no se encontro el usuario con el email ' + email);
                         return done(null, false);
                     }
 
                     if (!isValidPassword(password, user.password)) {
-                        console.log("Invalid Password");
+                        logger.error('contraseña invalida');
                         return done(null, false);
                     }
 
                     return done(null, user);
                 } catch (err) {
+                    logger.error(`Error registering user: ${err.message}`);
                     return done(err);
                 }
             }
@@ -68,7 +72,7 @@ export function iniPassport() {
                     const { age, email, first_name, last_name } = req.body;
                     let user = await userService.getOneByEmail(email);
                     if (user) {
-                        console.log("User already exists");
+                        logger.info("User already exists");
                         return done(null, false);
                     }
 
@@ -80,10 +84,10 @@ export function iniPassport() {
                         age,
                         password: createHash(password)
                     });
-                    console.log("User Registration succesful");
+                    logger.info("User Registration succesful");
                     return done(null, userCreated);
                 } catch (e) {
-                    console.log("Error in register");
+                    logger.error(`Error creating message: ${error.message}`);
                     console.log(e);
                     return done(e);
                 }
@@ -126,15 +130,15 @@ export function iniPassport() {
                             age: 'noage',
                             password: 'nopass',
                         });
-                        console.log('User Registration succesful');
+                        logger.info('User Registration succesful');
                         return done(null, userCreated);
                     } else {
-                        console.log('User already exists');
+                        logger.info('User already exists');
                         return done(null, user);
                     }
                 } catch (e) {
-                    console.log('Error en auth github');
-                    console.log(e);
+                    logger.error('Error en auth github');
+                    logger.error(e);
                     return done(e);
                 }
             }
