@@ -1,8 +1,8 @@
 import express from "express";
 import { readFile } from "fs/promises";
 import logger from "../utils/logger.js";
+export const loggerTestRouter = express.Router();
 
-const loggerTestRouter = express.Router();
 
 loggerTestRouter.get("/", async (req, res) => {
     try {
@@ -30,4 +30,3 @@ loggerTestRouter.get("/test", (req, res) => {
     res.send("Prueba de logger realizada. Revisa la consola y el archivo de logs.");
 });
 
-export default loggerTestRouter;

@@ -20,7 +20,7 @@ import { realTimeProductsRouter } from "./routes/realtimeproducts.routes.js";
 import { sessionsRouter } from "./routes/sessions.routes.js";
 import { usersRouter } from "./routes/users.routes.js";
 import { viewsRouter } from "./routes/views.routes.js";
-
+import { loggerTestRouter } from "./routes/loggerTest.routes.js"
 import { connectSocketServer } from "./utils/socketServer.js";
 import errorHandler from "./middlewares/error.js";
 import dotenv from "dotenv";
@@ -89,7 +89,7 @@ app.use("/api/sessions/", sessionsRouter)
 app.use("/", sessionsRouter)
 app.use("/mockingproducts", mockingRouter)
 app.use(errorHandler)
-
+app.use("/loggerTest", loggerTestRouter);
 
 // Endpoint de prueba de logger
 app.get('/loggerTest', (req, res) => {
