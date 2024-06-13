@@ -38,7 +38,7 @@ export function iniPassport() {
                                 role: 'admin'
                             });
                         }
-                        logger.error('User already exists');
+                        logger.warning('User already exists');
                         return done(null, user);
                     }
 
@@ -48,7 +48,7 @@ export function iniPassport() {
                     }
 
                     if (!isValidPassword(password, user.password)) {
-                        logger.error('contraseña invalida');
+                        logger.warning('contraseña invalida');
                         return done(null, false);
                     }
 

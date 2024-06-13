@@ -1,9 +1,6 @@
-//import winston from 'winston';
-//import { createLogger, transports } from 'winston';
-//import DailyRotateFile from 'winston-daily-rotate-file';
-
-
-import winston from 'winston';
+//archivo logger.js
+import winston, { createLogger, transports } from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
 // Definir los niveles de log
 const logLevels = {
@@ -45,14 +42,21 @@ const devLogger = winston.createLogger({
 });
 
 // Crear un logger para producción
-const prodLogger = winston.createLogger({
+const prodLogger = createLogger({
     levels: logLevels.levels,
     format: logFormat,
     transports: [
-        new winston.transports.Console({ level: 'info' }),
-        new winston.transports.File({ filename: 'errors.log', level: 'error' }), // Asegurarse de que el archivo está configurado
+        new transports.Console({ level: 'info' }),
+        new DailyRotateFile({
+            filename: 'logs/errors-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            maxFiles: '14d',
+            level: 'error',
+            format: logFormat,
+        }),
     ],
 });
+
 
 // Exportar el logger adecuado según el entorno
 const logger = process.env.NODE_ENV === 'production' ? prodLogger : devLogger;

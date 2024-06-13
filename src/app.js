@@ -30,7 +30,7 @@ const app = express();
 const PORT = 8080;
 dotenv.config();
 
-console.log("URL de conexión MongoDB:", config.MONGO_URL);
+logger.info("URL de conexión MongoDB:", config.MONGO_URL);
 
 //connectMongo();
 const httpServer = app.listen(PORT, () => {
