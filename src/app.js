@@ -25,6 +25,8 @@ import { connectSocketServer } from "./utils/socketServer.js";
 import errorHandler from "./middlewares/error.js";
 import dotenv from "dotenv";
 import logger from './utils/logger.js';
+import passwordRecoveryRouter from './routes/passwordRecovery.routes.js'; // Asegúrate de usar 'default' aquí
+import bodyParser from 'body-parser';
 
 const app = express();
 const PORT = 8080;
@@ -32,13 +34,20 @@ dotenv.config();
 
 logger.info("URL de conexión MongoDB:", config.MONGO_URL);
 
+// Middleware para analizar datos de formularios
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 //connectMongo();
 const httpServer = app.listen(PORT, () => {
     try {
-        logger.info(`Listening to the port ${PORT}\nAcceder a:`);
-        logger.info(`\t1). http://localhost:${PORT}/api/products`);
-        logger.info(`\t2). http://localhost:${PORT}/carts`);
-        logger.info(`\t3). http://localhost:${PORT}/loggerTest`);
+        logger.info(`URL de conexión MongoDB:`);
+        logger.info(`Listening to the port ${PORT}`);
+        logger.info(`Acceder a:`);
+        logger.info(`1). http://localhost:8080/api/products`);
+        logger.info(`2). http://localhost:8080/carts`);
+        logger.info(`3). http://localhost:8080/loggerTest`);
+        logger.info(`Conectado a DB ecommerce!`);
     } catch (err) {
         logger.error(err);
     }
@@ -48,6 +57,8 @@ connectMongo();
 connectSocketServer(httpServer);
 
 app.use(cookieParser('4lg0s3cr3t0'));
+
+app.use('/auth', passwordRecoveryRouter);
 
 app.use(
     session({
@@ -101,6 +112,22 @@ app.get('/loggerTest', (req, res) => {
 
 
     res.send("Prueba de logger realizada. Revisa la consola y el archivo de logs.");
+});
+
+// Ruta para mostrar el formulario de restablecimiento de contraseña
+app.get('/forgot-password', (req, res) => {
+    res.render('restablecerPassword'); // Renderizar la vista 'restablecerPassword.handlebars'
+});
+
+
+
+// Ruta para manejar la página de restablecimiento de contraseña en el frontend
+app.get('/reset-password/:token', (req, res) => {
+    // Renderizar la plantilla de restablecimiento de contraseña (handlebars)
+    res.render('resetPassword', {
+        clientUrl: process.env.CLIENT_URL, // Pasar la URL del cliente a la vista
+        token: req.params.token, // Pasar el token JWT como parámetro
+    });
 });
 
 

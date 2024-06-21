@@ -8,7 +8,7 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true, trim: true, maxlength: 100, },
     age: { type: String, required: true, trim: true, maxlength: 100, },
     password: { type: String, required: true, maxlength: 100, },
-    role: { type: String, enum: ['admin', 'user'], default: 'user', },
+    role: { type: String, enum: ['admin', 'user', 'premium'], default: 'user', },
     cart_ID: { type: String, trim: true, unique: true, required: true, },
     tickets: [
         {
