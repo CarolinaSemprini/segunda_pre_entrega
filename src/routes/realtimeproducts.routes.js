@@ -1,4 +1,4 @@
-//realtimeproducts.routes.js
+//realtimeproducts.routessss.js
 import express from "express"
 
 import { productsController } from "../controllers/products.controller.js";
