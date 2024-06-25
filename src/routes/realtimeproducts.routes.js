@@ -1,4 +1,8 @@
+//realtimeproducts.routes.js
 import express from "express"
+
+import { productsController } from "../controllers/products.controller.js";
+import { authorize } from "../middlewares/main.js";
 
 export const realTimeProductsRouter = express.Router()
 
@@ -13,3 +17,5 @@ realTimeProductsRouter.get('/', (req, res) => {
     }
 
 })
+
+realTimeProductsRouter.get('/realtimeproducts', authorize(['admin', 'premium']), productsController.getAllProducts);

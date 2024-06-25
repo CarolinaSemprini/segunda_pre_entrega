@@ -1,5 +1,6 @@
-//import { cartsModel } from "../DAO/models/carts.model.js";
+
 //import { UsersDAO } from "../DAO/models/users.model.js";
+import { MongooseUserModel } from '../DAO/models/mongoose/users.mongoose.js';
 import { Users, Carts } from "../DAO/factory.js";
 import { createHash } from "../utils/hash.js";
 import { UsersMongo } from "../DAO/models/users.model.js";
@@ -16,7 +17,33 @@ class UserService {
             throw new Error("No se pueden obtener todos los usuarios");
         }
     }
+    async getById(id) {
+        try {
+            const user = await MongooseUserModel.findById(id);
+            return user;
+        } catch (error) {
+            logger.error(`Error fetching user by ID: ${error.message}`);
+            throw error;
+        }
+    }
 
+    /*async getById(id) {
+        try {
+            return await UsersMongo.getById(id);
+        } catch (error) {
+            throw new Error('Unable to get user by ID: ' + error.message);
+        }
+    }*/
+
+    async getOneByUsername(username) {
+        try {
+            const user = await UsersMongo.getOneByUsername(username);
+            return user;
+        } catch (error) {
+            logger.error("Unable to get user by username", error);
+            throw new Error("Unable to get user by username");
+        }
+    }
     async getOne(username) {
         const user = await UsersMongo.getOne(username);
         return user
@@ -58,14 +85,46 @@ class UserService {
     }
 
     async update({ id, first_name, last_name, email }) {
-        const userUpdated = await UsersMongo.update({ id, first_name, last_name, email })
-        return userUpdated
+        try {
+            const userUpdated = await UsersMongo.update({ id, first_name, last_name, email });
+            return userUpdated;
+        } catch (error) {
+            logger.error(`Error updating user: ${error.message}`);
+            throw error;
+        }
     }
 
-    async delete({ id }) {
-        const userDeleted = await UsersMongo.delete({ id });
-        return userDeleted
+    async updateRole(userId, newRole) {
+        try {
+            const updatedUser = await MongooseUserModel.findByIdAndUpdate(
+                userId,
+                { role: newRole },
+                { new: true }
+            );
+
+            if (!updatedUser) {
+                throw new Error('User not found');
+            }
+
+            return updatedUser;
+        } catch (error) {
+            logger.error(`Error updating user role: ${error.message}`);
+            throw error;
+        }
     }
+
+
+    async delete({ id }) {
+        try {
+            const userDeleted = await UsersMongo.delete({ id });
+            return userDeleted;
+        } catch (error) {
+            logger.error(`Error deleting user: ${error.message}`);
+            throw error;
+        }
+    }
+
 }
+
 
 export const userService = new UserService()

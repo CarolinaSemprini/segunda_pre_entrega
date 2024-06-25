@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Rol de Usuario</title>
+</head>
+<body>
+    <h1>Cambiar Rol de Usuario</h1>
+    <form id="changeRoleForm" action="/api/users/premium/{{ userId }}" method="POST">
+        <input type="hidden" name="_method" value="PUT"> <!-- Para enviar un método PUT en un formulario HTML -->
+        <label for="firstName">Nombre:</label>
+        <input type="text" id="firstName" name="firstName" required>
+        <br><br>
+        <label for="lastName">Apellido:</label>
+        <input type="text" id="lastName" name="lastName" required>
+        <br><br>
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required>
+        <br><br>
+        <label for="role">Selecciona el nuevo rol:</label>
+        <select id="role" name="role" required>
+            <option value="admin">Admin</option>
+            <option value="premium">Premium</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Cambiar Rol">
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+    <script>
+        const form = document.getElementById('changeRoleForm');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const role = document.getElementById('role').value;
+            const userId = form.action.split('/').pop(); // Obtener el userId del URL
+
+            try {
+                const response = await axios.put(`/api/users/premium/${userId}`, { firstName, lastName, email, role });
+                console.log(response.data);
+                alert('¡Rol cambiado exitosamente!');
+                // Redirigir o manejar la respuesta según necesites
+            } catch (error) {
+                console.error('Error al cambiar el rol:', error);
+                alert('Hubo un error al cambiar el rol. Por favor, intenta de nuevo más tarde.');
+            }
+        });
+    </script>
+</body>
+</html>

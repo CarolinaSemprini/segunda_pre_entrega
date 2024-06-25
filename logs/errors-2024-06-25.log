@@ -1,0 +1,15 @@
+2024-06-25 14:15:21 [31m[31merror[31m[39m: Unable to create the product products validation failed: owner: Cast to ObjectId failed for value "admin" (type string) at path "owner" because of "BSONError", status: Path `status` is required., code: Path `code` is required., description: Path `description` is required., title: Path `title` is required.
+2024-06-25 14:18:16 [31m[31merror[31m[39m: Unable to get user by ID Cast to ObjectId failed for value "CarolinaSemprini" (type string) at path "_id" for model "users"
+2024-06-25 14:18:16 [31m[31merror[31m[39m: Error en auth github
+2024-06-25 14:18:16 [31m[31merror[31m[39m: undefined
+2024-06-25 14:18:26 [31m[31merror[31m[39m: Unable to get user by ID Cast to ObjectId failed for value "CarolinaSemprini" (type string) at path "_id" for model "users"
+2024-06-25 14:18:26 [31m[31merror[31m[39m: Error en auth github
+2024-06-25 14:18:26 [31m[31merror[31m[39m: undefined
+2024-06-25 14:21:47 [31m[31merror[31m[39m: Unable to get user by ID Cast to ObjectId failed for value "CarolinaSemprini" (type string) at path "_id" for model "users"
+2024-06-25 14:21:47 [31m[31merror[31m[39m: Error en auth github
+2024-06-25 14:21:47 [31m[31merror[31m[39m: undefined
+2024-06-25 14:29:41 [31m[31merror[31m[39m: Unable to get user by ID Cast to ObjectId failed for value "CarolinaSemprini" (type string) at path "_id" for model "users"
+2024-06-25 14:29:41 [31m[31merror[31m[39m: Error en auth github
+2024-06-25 14:29:41 [31m[31merror[31m[39m: undefined
+2024-06-25 20:12:42 [31m[31merror[31m[39m: Error en auth github
+2024-06-25 20:12:42 [31m[31merror[31m[39m: request to https://api.github.com/user/emails failed, reason: socket hang up

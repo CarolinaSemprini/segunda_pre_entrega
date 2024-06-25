@@ -1,7 +1,8 @@
+//products.routes.js
 import express from "express";
 import { uploader } from "../utils/multer.js";
 import { productsController } from "../controllers/products.controller.js";
-import { isAdmin, authenticate, isPremiumOrAdmin } from "../middlewares/main.js";
+import { isAdmin, authenticate, isPremiumOrAdmin, isPremium } from "../middlewares/main.js";
 export const productsRouter = express.Router()
 
 /*productsRouter.get('/', productsController.getAllProducts)
@@ -13,6 +14,16 @@ productsRouter.delete('/:pid', isAdmin, productsController.delete)
 productsRouter.post('/', isAdmin, uploader.single('file'), productsController.create)
 
 productsRouter.put('/:pid', isAdmin, productsController.update)*/
+// Ruta para realtimeproducts
+productsRouter.get('/realtimeproducts', isPremium, (req, res) => {
+    try {
+        return res.status(200).render('realtimeproducts', {}); // Renderizar la vista realtimeproducts
+    } catch (error) {
+        return res.status(500).json({ status: 'error' });
+    }
+});
+
+//productsRouter.get('/realtimeproducts', isPremium, productsController.realTimeProducts);
 
 productsRouter.get('/', productsController.getAllProducts);
 

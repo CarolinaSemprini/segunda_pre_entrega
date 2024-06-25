@@ -120,7 +120,8 @@ export function iniPassport() {
                     }
                     profile.email = emailDetail.email;
 
-                    let user = await userService.getOne(profile.username);
+                    //let user = await userService.getOne(profile.username);
+                    let user = await userService.getOneByUsername(profile.username);
                     if (!user) {
                         let userCreated = await userService.create({
                             first_name: profile.displayName || 'noname',

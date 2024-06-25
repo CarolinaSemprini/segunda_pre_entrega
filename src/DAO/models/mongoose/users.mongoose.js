@@ -1,4 +1,4 @@
-//@ts-check
+//archivo model llamado users.mongoose.js
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({

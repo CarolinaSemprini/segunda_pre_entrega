@@ -48,10 +48,26 @@ export const isPremiumOrAdmin = (req, res, next) => {
     next();
 };
 
+export const isPremium = (req, res, next) => {
+    if (req.session.user && req.session.user.role === 'premium') {
+        next(); // Permitir acceso si el usuario tiene rol premium
+    } else {
+        return res.render('errorLogin', { msg: 'Authorization Error' });
+    }
+
+};
 export const isUser = (req, res, next) => {
     if (req.session.user.role !== 'user') {
         return res.render('errorLogin', { msg: 'Authorization Error' });
     }
     next();
 };
+export const authorize = (roles = []) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.session.user.role)) {
+            return res.status(403).json({ status: 'error', msg: 'You do not have permission to access this resource' });
+        }
+        next();
+    }
+}
 

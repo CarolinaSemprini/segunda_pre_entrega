@@ -1,5 +1,6 @@
 //@ts-check
 import MongoStore from 'connect-mongo';
+import path from 'path';
 import { connectMongo } from './utils/dbConnection.js';
 import cookieParser from 'cookie-parser';
 import express from "express";
@@ -27,6 +28,7 @@ import dotenv from "dotenv";
 import logger from './utils/logger.js';
 import passwordRecoveryRouter from './routes/passwordRecovery.routes.js'; // Asegúrate de usar 'default' aquí
 import bodyParser from 'body-parser';
+import cambiarRolUsuarioRoutes from './routes/cambiarRolUsuario.routes.js';
 
 const app = express();
 const PORT = 8080;
@@ -58,7 +60,7 @@ connectSocketServer(httpServer);
 
 app.use(cookieParser('4lg0s3cr3t0'));
 
-app.use('/auth', passwordRecoveryRouter);
+
 
 app.use(
     session({
@@ -85,9 +87,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.engine("handlebars", handlebars.engine());
-app.set("views", __dirname + "/views");
+//app.set("views", __dirname + "/views");
+app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "handlebars");
 
+app.use('/auth', passwordRecoveryRouter);
 app.use("/api/products", authenticate, productsRouter);
 app.use("/api/carts", authenticate, cartsRouter);
 app.use("/api/users"/* ,authenticate */, usersRouter);
@@ -101,7 +105,7 @@ app.use("/", sessionsRouter)
 app.use("/mockingproducts", mockingRouter)
 app.use(errorHandler)
 app.use("/loggerTest", loggerTestRouter);
-
+app.use("/api/users", cambiarRolUsuarioRoutes);
 // Endpoint de prueba de logger
 app.get('/loggerTest', (req, res) => {
     logger.debug("Este es un mensaje de depuración (debug)");
@@ -130,6 +134,18 @@ app.get('/reset-password/:token', (req, res) => {
     });
 });
 
+
+
+/// Ruta para mostrar el formulario de cambiar rol de usuario
+app.get('/cambiar-rol', (req, res) => {
+    res.render('cambiarRolUsuario'); // Asegúrate de tener la vista 'cambiarRolUsuario.handlebars'
+});
+
+// Endpoint para manejar el formulario de cambiar rol de usuario
+app.post('/cambiar-rol', (req, res) => {
+    // Aquí manejas la lógica para cambiar el rol de usuario
+    res.send('Cambiar rol de usuario'); // Puedes enviar una respuesta de confirmación
+});
 
 // Endpoint para probar el logger
 app.get('/loggerTest', (req, res) => {

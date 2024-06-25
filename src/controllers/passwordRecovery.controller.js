@@ -26,6 +26,9 @@ export const sendResetPasswordEmail = async (req, res) => {
         }
 
         // Generar token JWT con el userId y enviar correo
+        //const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        //const link = `${process.env.CLIENT_URL}/reset-password/${token}`;
+        // Generar token JWT con el userId y enviar correo
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         const link = `${process.env.CLIENT_URL}/reset-password/${token}`;
 

@@ -1,3 +1,4 @@
+// archivo users.model.js
 import { MongooseUserModel } from "./mongoose/users.mongoose.js";
 import logger from '../../utils/logger.js';
 class UsersModel {
@@ -31,6 +32,39 @@ class UsersModel {
             return userCreated;
         } catch (error) {
             logger.error("Unable to create the user", error);
+            throw error;
+        }
+    }
+
+    async getById(id) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid ObjectId');
+        }
+        const user = await MongooseUserModel.findById(id);
+        return user;
+    }
+
+    /*async getOne(userId) {
+        try {
+            const user = await MongooseUserModel.findById(userId, { __v: false });
+            return user;
+        } catch (error) {
+            logger.error("Unable to get user by ID", error);
+            throw new Error("Unable to get user by ID");
+        }
+    }*/
+
+    async getOne(username) {
+        const user = await MongooseUserModel.findOne({ username: username }, { __v: false });
+        return user;
+    }
+
+    async getOneByUsername(username) {
+        try {
+            const user = await MongooseUserModel.findOne({ username: username });
+            return user;
+        } catch (error) {
+            logger.error("Unable to get user by username", error);
             throw error;
         }
     }

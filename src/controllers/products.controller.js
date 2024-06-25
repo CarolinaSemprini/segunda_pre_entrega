@@ -1,5 +1,7 @@
 
-/*import { prodService } from "../services/products.service.js";
+import { prodService } from "../services/products.service.js";
+import { userService } from "../services/users.service.js";
+import { usersController } from "./users.controller.js";
 
 class ProductsController {
     getAllProducts = async (req, res) => {
@@ -59,31 +61,76 @@ class ProductsController {
         }
     }
 
-    create = async (req, res) => {
+    /*create = async (req, res) => {
         try {
             if (!req.file) {
-                return res
-                    .status(400).
-                    json({ status: "error", msg: 'before upload a file to be able to modify the product' })
+                return res.status(400).json({ status: "error", msg: 'Sube un archivo para modificar el producto' });
             }
 
             const name = req.file.filename;
-            const product = { ...req.body, thumbnail: `http://localhost:8080/${name}`, path: `${req.file.path}` };
-            const createdProduct = await prodService.create(product)
-            if (createdProduct) {
-                return res
-                    .status(201).
-                    json({ status: "success", msg: 'product created', payload: createdProduct })
-            }
-            else {
-                return res
-                    .status(400).
-                    json({ status: "error", msg: 'The product was not created because it does not meet the conditions' })
+            let owner = "admin"; // Por defecto, asumimos que el propietario es admin
+
+            // Verificar si el usuario es premium
+            const user = await userService.getById(req.session.user._id);
+            if (user.role === 'premium') {
+                owner = user.email; // Si es premium, establecer el propietario como su email
             }
 
+            const product = { ...req.body, thumbnail: `http://localhost:8080/${name}`, path: `${req.file.path}`, owner };
+
+            const createdProduct = await prodService.create(product);
+            if (createdProduct) {
+                return res.status(201).json({ status: "success", msg: 'Producto creado', payload: createdProduct });
+            } else {
+                return res.status(400).json({ status: "error", msg: 'El producto no cumple las condiciones para ser creado' });
+            }
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ status: 'error', msg: 'No se pudo crear el producto', error: error.message });
         }
-        catch (error) {
-            return res.status(500).json({ status: 'error', msg: 'could not create product', error: error.message });
+    }*/
+
+    create = async (req, res) => {
+        try {
+            if (!req.file) {
+                return res.status(400).json({ status: "error", msg: 'Please upload a file' });
+            }
+
+            const { filename, path } = req.file;
+            const { name, price, category, stock, status, code, description, title } = req.body;
+
+            let owner = "admin"; // Default owner is admin
+
+            // Verify user role
+            const user = await userService.getById(req.session.user._id); // Assuming you have user ID in session
+            if (!user) {
+                return res.status(401).json({ status: 'error', msg: 'Unauthorized' });
+            }
+
+            if (user.role === 'premium') {
+                owner = user.username; // Set owner to username if user is premium
+            }
+
+            const product = {
+                name,
+                price,
+                category,
+                stock,
+                thumbnail: `http://localhost:8080/${filename}`,
+                path,
+                owner,
+                status,
+                code,
+                description,
+                title
+            };
+
+            const createdProduct = await prodService.create(product);
+            return res.status(201).json({ status: 'success', msg: 'Product created', payload: createdProduct });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ status: 'error', msg: 'Error creating product', error: error.message });
         }
     }
 
@@ -108,9 +155,10 @@ class ProductsController {
     }
 }
 
-export const productsController = new ProductsController()*/
+export const productsController = new ProductsController()
 
-import { prodService } from "../services/products.service.js";
+/*import { prodService } from "../services/products.service.js";
+import { userService } from "../services/users.service.js";
 
 class ProductsController {
     getAllProducts = async (req, res) => {
@@ -205,6 +253,7 @@ class ProductsController {
         }
     }
 
+
     update = async (req, res) => {
         try {
             const pid = req.params.pid;
@@ -227,4 +276,4 @@ class ProductsController {
 }
 
 export const productsController = new ProductsController();
-
+*/

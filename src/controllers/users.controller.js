@@ -84,7 +84,41 @@ class UsersController {
         }
     }
 
-    update = async (req, res) => {
+    getById = async (req, res) => {
+        try {
+            const id = req.params.id;
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                return res.status(400).json({
+                    status: "error",
+                    msg: "Invalid ID format",
+                    payload: {},
+                });
+            }
+            const user = await userService.getById(id);
+            if (user) {
+                return res.status(200).json({
+                    status: "success",
+                    msg: "Usuario encontrado",
+                    payload: user,
+                });
+            } else {
+                return res.status(404).json({
+                    status: "error",
+                    msg: "Usuario no encontrado",
+                    payload: {},
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                status: "error",
+                msg: "Error al obtener el usuario",
+                payload: {},
+            });
+        }
+    }
+
+    /*update = async (req, res) => {
         try {
             const { id } = req.params;
             const { first_name, last_name, username, email, age, password } = req.body;
@@ -126,6 +160,48 @@ class UsersController {
             return res.status(500).json({
                 status: "error",
                 msg: "something went wrong :(",
+                payload: {},
+            });
+        }
+    }*/
+    update = async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { first_name, last_name, username, email, age, password } = req.body;
+
+            // Validar que los campos necesarios estén presentes y no estén vacíos
+            if (!first_name || !last_name || !email || !id) {
+                console.log(
+                    "Error de validación: por favor complete nombre, apellido y correo electrónico."
+                );
+                return res.status(400).json({
+                    status: "error",
+                    msg: "Por favor complete nombre, apellido y correo electrónico.",
+                    payload: {},
+                });
+            }
+
+            // Actualizar el usuario en la base de datos
+            const updatedUser = await userService.update({ id, first_name, last_name, email });
+
+            if (updatedUser) {
+                return res.status(200).json({
+                    status: "success",
+                    msg: "Usuario actualizado correctamente",
+                    payload: updatedUser,
+                });
+            } else {
+                return res.status(404).json({
+                    status: "error",
+                    msg: "Usuario no encontrado",
+                    payload: {},
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                status: "error",
+                msg: "Error interno del servidor al actualizar el usuario",
                 payload: {},
             });
         }

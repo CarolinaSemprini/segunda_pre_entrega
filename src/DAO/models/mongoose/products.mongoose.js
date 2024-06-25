@@ -1,3 +1,4 @@
+// archivo model llamado products.mongoose.js
 import { Schema, model } from "mongoose";
 import mongoosePaginate from 'mongoose-paginate-v2';
 
@@ -12,7 +13,7 @@ const productSchema = new Schema({
     category: { type: String, required: true },
     status: { type: Boolean, required: true },
     path: { type: String, required: true },
-    owner: { type: Schema.Types.ObjectId, ref: 'users', default: null }
+    owner: { type: String, required: true }
 });
 productSchema.plugin(mongoosePaginate)
 export const MongooseProductModel = model("products", productSchema);
