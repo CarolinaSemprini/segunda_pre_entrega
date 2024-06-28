@@ -1,3 +1,4 @@
+<!--vista login.handlebars -->
 <head>
     <link rel="stylesheet" href="/login.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -12,9 +13,9 @@
     <a class="github" href="/api/sessions/github"><span><i class="fa-brands fa-github"></i></span></a>
     <h2>Login</h2>
     <h3>Ingrese sus credenciales</h3>
-    <form class="form" action="/api/sessions/login" method="post">
+    <form class="form" id="loginForm" action="/api/sessions/login" method="post">
         <div class="textbox">
-            <input type="email" name="email" required/>
+            <input type="email" id="email" name="email" required/>
             <label>Email</label>
             <span class="material-symbols-outlined">account_circle</span>
         </div>
@@ -29,3 +30,31 @@
         <button type="submit">Enviar</button>
     </form>
 </div>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/api/sessions/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                localStorage.setItem('token', data.token); // Almacenar el token en localStorage
+                alert('Login successful!');
+                window.location.href = '/views/products'; // Redirigir a otra página después del inicio de sesión
+            } else {
+                alert('Login failed: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+</script>

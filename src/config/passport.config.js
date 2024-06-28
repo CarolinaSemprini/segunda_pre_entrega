@@ -1,3 +1,4 @@
+//archivo passport.config.js
 import fetch from 'node-fetch';
 import passport from "passport";
 import GitHubStrategy from 'passport-github2';
@@ -5,6 +6,7 @@ import local from "passport-local";
 import { isValidPassword, createHash } from "../utils/hash.js";
 import dotenv from 'dotenv'
 import { userService } from '../services/users.service.js';
+
 import { MongooseUserModel } from '../DAO/models/mongoose/users.mongoose.js';
 import logger from '../utils/logger.js';
 

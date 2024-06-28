@@ -10,7 +10,7 @@ import passport from 'passport';
 import { __dirname } from "./config.js";
 import config from './config/config.js';
 import { iniPassport } from './config/passport.config.js';
-import { authenticate, isAdmin, isUser } from './middlewares/main.js';
+import { authenticate, isUser, isPremiumOrAdmin } from './middlewares/main.js';
 import { cartsRouter } from "./routes/carts.routes.js";
 import { ChatRouter } from "./routes/chat.routes.js";
 import { cookiesRouter } from "./routes/cookies.routes.js";
@@ -29,7 +29,7 @@ import logger from './utils/logger.js';
 import passwordRecoveryRouter from './routes/passwordRecovery.routes.js'; // Asegúrate de usar 'default' aquí
 import bodyParser from 'body-parser';
 import cambiarRolUsuarioRoutes from './routes/cambiarRolUsuario.routes.js';
-
+import { authMiddleware } from './middlewares/authMiddleware.js'
 const app = express();
 const PORT = 8080;
 dotenv.config();
@@ -97,7 +97,8 @@ app.use("/api/carts", authenticate, cartsRouter);
 app.use("/api/users"/* ,authenticate */, usersRouter);
 app.use("/chat", isUser, ChatRouter);
 app.use("/home", homeRouter)
-app.use("/realtimeproducts", isAdmin, realTimeProductsRouter)
+//app.use("/realtimeproducts", isAdmin, realTimeProductsRouter)
+app.use('/realtimeproducts', authenticate, isPremiumOrAdmin, realTimeProductsRouter);
 app.use("/views", viewsRouter)
 app.use("/cookie", cookiesRouter)
 app.use("/api/sessions/", sessionsRouter)
@@ -106,6 +107,10 @@ app.use("/mockingproducts", mockingRouter)
 app.use(errorHandler)
 app.use("/loggerTest", loggerTestRouter);
 app.use("/api/users", cambiarRolUsuarioRoutes);
+// Middleware de autenticación JWT
+app.use(authMiddleware);
+
+
 // Endpoint de prueba de logger
 app.get('/loggerTest', (req, res) => {
     logger.debug("Este es un mensaje de depuración (debug)");

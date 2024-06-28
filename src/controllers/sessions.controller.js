@@ -1,5 +1,9 @@
 import CurrentDTO from "../DAO/DTO/current.dto.js";
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import logger from "../utils/logger.js";
+
+dotenv.config();
 class SessionsController {
     get = async (req, res) => {
         try {
@@ -32,6 +36,8 @@ class SessionsController {
 
     postLogin = (req, res) => {
         try {
+
+            const user = req.user; // Obtener el usuario desde req.user
             req.session.user = {
                 _id: req.user._id,
                 username: req.user.username,
@@ -42,7 +48,13 @@ class SessionsController {
                 role: req.user.role,
                 cart_ID: req.user.cart_ID
             };
-            return res.redirect('/views/products');
+            //lo que se agrego nuevo
+            req.session.user = user;
+            const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            res.status(200).json({ status: 'success', token });
+            //esto ya estaba
+            // return res.redirect('/views/products');
+
         } catch (error) {
             logger.error(`Error creating message: ${error.message}`)
             return res.status(500).json({ status: "error", msg: error });
@@ -60,6 +72,7 @@ class SessionsController {
     }
 
     postRegister = (req, res) => {
+        const user = req.user; // Obtener el usuario desde req.user
         try {
             req.session.user = { _id: req.user._id, username: req.user.username, email: req.user.email, first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, role: req.user.role, cart_ID: req.user.cart_ID };
             return res.redirect('/views/products');
@@ -95,6 +108,8 @@ class SessionsController {
 
     getGithubCallback = (req, res) => {
         try {
+
+            //const user = req.user; // Obtener el usuario desde req.user-lo nuevo
             req.session.user = {
                 _id: req.user._id,
                 username: req.user.username,
@@ -105,6 +120,11 @@ class SessionsController {
                 role: req.user.role,
                 cart_ID: req.user.cart_ID
             };
+
+            //lo nuevo
+            //const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            //res.status(200).json({ status: 'success', token });
+            //lo que estaba
             return res.redirect('/views/products');
         }
         catch (error) {

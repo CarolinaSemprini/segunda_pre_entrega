@@ -1,45 +1,12 @@
 //archivo cambiarRolUsuario.controller.js
-//import { userService } from '../services/users.service.js';
-//import logger from '../utils/logger.js';
 
-/*const changeUserRole = async (req, res) => {
-    const userId = req.params.uid;
-
-    try {
-        // Obtener el usuario por ID
-        const user = await userService.getById(userId);
-
-        if (!user) {
-            return res.status(404).json({
-                status: 'error',
-                message: 'User not found'
-            });
-        }
-
-        // Cambiar el rol del usuario
-        const newRole = user.role === 'user' ? 'premium' : 'user';
-        const updatedUser = await userService.updateRole(userId, newRole);
-
-        return res.status(200).json({
-            status: 'success',
-            message: 'User role updated successfully',
-            data: updatedUser
-        });
-    } catch (error) {
-        logger.error(`Error changing user role: ${error.message}`);
-        return res.status(500).json({
-            status: 'error',
-            message: 'Internal server error'
-        });
-    }
-};*/
 
 import { userService } from '../services/users.service.js';
 import logger from '../utils/logger.js';
 
 export const togglePremium = async (req, res) => {
     const userId = req.params.uid;
-    const { firstName, lastName, email, role } = req.body;
+    const { first_Name, lastName, email, role } = req.body;
 
     console.log('Received request to change role for userId:', userId, 'to role:', role);
 
@@ -55,7 +22,7 @@ export const togglePremium = async (req, res) => {
         }
 
         // Validar que los campos necesarios estén presentes y no estén vacíos
-        if (!firstName || !lastName || !email) {
+        if (!first_Name || !lastName || !email) {
             return res.status(400).json({
                 status: 'error',
                 message: 'Please complete firstName, lastName and email'
@@ -63,8 +30,8 @@ export const togglePremium = async (req, res) => {
         }
 
         // Actualizar los datos del usuario
-        user.firstName = firstName;
-        user.lastName = lastName;
+        user.first_name = firstName;
+        user.last_name = lastName;
         user.email = email;
         user.role = role;
 

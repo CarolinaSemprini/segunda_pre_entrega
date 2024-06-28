@@ -38,13 +38,22 @@
             const lastName = document.getElementById('lastName').value;
             const email = document.getElementById('email').value;
             const role = document.getElementById('role').value;
-            const userId = form.action.split('/').pop(); // Obtener el userId del URL
+            const userId = form.action.split('/').pop();
+
+            const token = localStorage.getItem('token'); // Obtener el token del localStorage
+
+            if (!token) {
+                alert('No se encontró el token de autenticación. Por favor, inicia sesión.');
+                return;
+            }
 
             try {
-                const response = await axios.put(`/api/users/premium/${userId}`, { firstName, lastName, email, role });
+                const response = await axios.put(`/api/users/premium/${userId}`, 
+                    { firstName, lastName, email, role },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
                 console.log(response.data);
                 alert('¡Rol cambiado exitosamente!');
-                // Redirigir o manejar la respuesta según necesites
             } catch (error) {
                 console.error('Error al cambiar el rol:', error);
                 alert('Hubo un error al cambiar el rol. Por favor, intenta de nuevo más tarde.');

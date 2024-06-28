@@ -94,20 +94,31 @@ class UsersController {
                     payload: {},
                 });
             }
+
             const user = await userService.getById(id);
-            if (user) {
-                return res.status(200).json({
-                    status: "success",
-                    msg: "Usuario encontrado",
-                    payload: user,
-                });
-            } else {
+
+            if (!user) {
                 return res.status(404).json({
                     status: "error",
                     msg: "Usuario no encontrado",
                     payload: {},
                 });
             }
+
+            // Verificar el rol del usuario antes de devolver la información
+            if (!this.checkUserRole(req.user.role, user.role)) {
+                return res.status(403).json({
+                    status: "error",
+                    msg: "No tienes permisos para acceder a este usuario",
+                    payload: {},
+                });
+            }
+
+            return res.status(200).json({
+                status: "success",
+                msg: "Usuario encontrado",
+                payload: user,
+            });
         } catch (error) {
             console.log(error);
             return res.status(500).json({
@@ -117,7 +128,6 @@ class UsersController {
             });
         }
     }
-
     /*update = async (req, res) => {
         try {
             const { id } = req.params;
@@ -170,7 +180,7 @@ class UsersController {
             const { first_name, last_name, username, email, age, password } = req.body;
 
             // Validar que los campos necesarios estén presentes y no estén vacíos
-            if (!first_name || !last_name || !email || !id) {
+            if (!first_name || !last_name || !email || !role) {
                 console.log(
                     "Error de validación: por favor complete nombre, apellido y correo electrónico."
                 );
@@ -182,7 +192,7 @@ class UsersController {
             }
 
             // Actualizar el usuario en la base de datos
-            const updatedUser = await userService.update({ id, first_name, last_name, email });
+            const updatedUser = await userService.update({ id, first_name, last_name, email, role });
 
             if (updatedUser) {
                 return res.status(200).json({
@@ -207,6 +217,50 @@ class UsersController {
         }
     }
 
+    changeUserRole = async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { newRole } = req.body;
+
+            // Verificar que el rol proporcionado es válido
+            const validRoles = ["admin", "user", "premium"];
+            if (!validRoles.includes(newRole)) {
+                return res.status(400).json({
+                    status: "error",
+                    msg: "Invalid role provided",
+                    payload: {},
+                });
+            }
+
+            // Verificar si el usuario existe
+            const user = await userService.getById(id);
+            if (!user) {
+                return res.status(404).json({
+                    status: "error",
+                    msg: "User not found",
+                    payload: {},
+                });
+            }
+
+            // Actualizar el rol del usuario
+            user.role = newRole;
+            const updatedUser = await userService.update(user);
+
+            return res.status(200).json({
+                status: "success",
+                msg: "User role updated successfully",
+                payload: updatedUser,
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                status: "error",
+                msg: "Internal server error while updating user role",
+                payload: {},
+            });
+        }
+    }
+
     delete = async (req, res) => {
         try {
             const { id } = req.params;
@@ -224,6 +278,13 @@ class UsersController {
                 payload: {},
             });
         }
+    }
+
+    checkUserRole = (loggedInUserRole, requestedUserRole) => {
+        // Implementa la lógica para verificar si el usuario logueado tiene permisos para acceder al usuario solicitado
+        // Aquí puedes comparar roles, por ejemplo:
+        return loggedInUserRole === 'admin' || loggedInUserRole === 'premium' || loggedInUserRole === requestedUserRole;
+        // O cualquier otra lógica según tus requisitos
     }
 }
 

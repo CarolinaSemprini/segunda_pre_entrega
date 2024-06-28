@@ -1,3 +1,4 @@
+//products.model.js
 import { MongooseProductModel } from "./mongoose/products.mongoose.js";
 import logger from "../../utils/logger.js";
 

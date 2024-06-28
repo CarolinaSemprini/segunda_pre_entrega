@@ -15,13 +15,15 @@ productsRouter.post('/', isAdmin, uploader.single('file'), productsController.cr
 
 productsRouter.put('/:pid', isAdmin, productsController.update)*/
 // Ruta para realtimeproducts
-productsRouter.get('/realtimeproducts', isPremium, (req, res) => {
+// Ruta para realtimeproducts
+productsRouter.get('/realtimeproducts', authenticate, isPremium, (req, res) => {
     try {
-        return res.status(200).render('realtimeproducts', {}); // Renderizar la vista realtimeproducts
+        return res.status(200).render('realtimeproducts', {});
     } catch (error) {
         return res.status(500).json({ status: 'error' });
     }
 });
+
 
 //productsRouter.get('/realtimeproducts', isPremium, productsController.realTimeProducts);
 
